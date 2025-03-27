@@ -1,0 +1,26 @@
+# version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ./frontend # Path to the frontend directory
+    ports:
+      - "3000:3000" # Expose port 3000 for the frontend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8080 # API URL for the frontend to access the backend
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./backend # Path to the backend directory
+    ports:
+      - "8080:8080" # Expose port 8080 for the backend API
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge # Custom network for inter-service communication

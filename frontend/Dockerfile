@@ -1,27 +1,27 @@
-# Use the Node.js image as the base
-FROM node:16
+# Use a Node.js image that supports Bun
+FROM node:20 AS build
 
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Install Bun manually (using curl to download and install Bun)
+# Install Bun globally
 RUN curl -fsSL https://bun.sh/install | bash
+ENV PATH="/root/.bun/bin:$PATH"
 
-# Add Bun to PATH (to make it available for commands)
-ENV PATH="/root/.bun/bin:${PATH}"
-
-# Copy package.json and bun.lockb from the frontend directory
-COPY ../package.json /app/
-COPY ../bun.lock /app/
+# Copy package.json and bun.lockb
+COPY package.json bun.lockb ./
 
 # Install dependencies using Bun
 RUN bun install
 
-# Copy the rest of the frontend application files into the container
-COPY ./ ./
+# Copy the entire project
+COPY . .
 
-# Expose the port for the frontend
+# Build the Bun app (or Next.js app)
+RUN bun run build
+
+# Expose the port where the Next.js app will run
 EXPOSE 3000
 
-# Start the frontend application using Bun
-CMD ["bun", "dev"]
+# Start the app using Bun
+CMD ["bun", "run", "start"]
