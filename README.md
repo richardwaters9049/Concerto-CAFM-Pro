@@ -1,6 +1,4 @@
-# Project Overview
-
-## Concerto CAFM Pro
+# Concerto CAFM Pro
 
 ### Project Aim
 
